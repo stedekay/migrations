@@ -75,6 +75,11 @@ EOT
 
         $fromSchema = $conn->getSchemaManager()->createSchema();
         $toSchema = $tool->getSchemaFromMetadata($metadata);
+
+        // remove ignored tables from schemas
+        $this->removeIgnoredTables($fromSchema, $configuration);
+        $this->removeIgnoredTables($toSchema, $configuration);
+
         $up = $this->buildCodeFromSql($configuration, $fromSchema->getMigrateToSql($toSchema, $platform));
         $down = $this->buildCodeFromSql($configuration, $fromSchema->getMigrateFromSql($toSchema, $platform));
 
@@ -87,6 +92,16 @@ EOT
         $path = $this->generateMigration($configuration, $input, $version, $up, $down);
 
         $output->writeln(sprintf('Generated new migration class to "<info>%s</info>" from schema differences.', $path));
+    }
+
+    private function removeIgnoredTables($schema, $configuration) {
+        $ignoreTables = $configuration->getIgnoreTables();
+
+        foreach ($ignoreTables as $table) {
+            if($schema->hasTable($table)) {
+                $schema->dropTable($table);
+            }
+        }
     }
 
     private function buildCodeFromSql(Configuration $configuration, array $sql)

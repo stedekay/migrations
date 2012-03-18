@@ -57,5 +57,8 @@ class YamlConfiguration extends AbstractFileConfiguration
                 $this->registerMigration($migration['version'], $migration['class']);
             }
         }
+        if (isset($array['ignore_tables'])) {
+            $this->setIgnoreTables($array['ignore_tables']);
+        }
     }
 }

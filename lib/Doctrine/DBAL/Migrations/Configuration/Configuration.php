@@ -96,6 +96,13 @@ class Configuration
     private $migrations = array();
 
     /**
+     * Array of tables which have to be ignored
+     *
+     * @var array
+     */
+    private $ignoreTables = array();
+
+    /**
      * Construct a migration configuration object.
      *
      * @param Connection $connection      A Connection instance
@@ -318,6 +325,26 @@ class Configuration
     }
 
     /**
+     * Set the array of ignored tables.
+     *
+     * @param array $ignoreTables
+     */
+    public function setIgnoreTables($ignoreTables)
+    {
+        $this->ignoreTables = $ignoreTables;
+    }
+
+    /**
+     * Get the array of ignored tables.
+     *
+     * @return array $ignoreTables
+     */
+    public function getIgnoreTables()
+    {
+        return $this->ignoreTables;
+    }
+
+    /**
      * Returns the Version instance for a given version in the format YYYYMMDDHHMMSS.
      *
      * @param string $version   The version string in the format YYYYMMDDHHMMSS.
@@ -509,4 +536,5 @@ class Configuration
             return $version->getVersion() <= $to ? true : false;
         }
     }
+
 }
